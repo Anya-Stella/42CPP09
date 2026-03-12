@@ -15,7 +15,10 @@ int	main(int argc, char **argv)
 	// output
 	try
 	{
-		
+		BitcoinExchange	btc;
+
+		btc.loadDatabase("../cpp_09/data.csv");
+		btc.processInput(argv[1]);
 	}
 	catch (const std::exception& e)
 	{

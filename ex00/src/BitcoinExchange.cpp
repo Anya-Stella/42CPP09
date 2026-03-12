@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include <cstdlib>
 
-
-
 // default
 BitcoinExchange::BitcoinExchange() {};
 BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) : _rates(other._rates) {};
