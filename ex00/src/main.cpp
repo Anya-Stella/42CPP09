@@ -17,7 +17,7 @@ int	main(int argc, char **argv)
 	{
 		BitcoinExchange	btc;
 
-		btc.loadDatabase("../cpp_09/data.csv");
+		btc.loadDatabase("data.csv");
 		btc.processInput(argv[1]);
 	}
 	catch (const std::exception& e)
