@@ -13,19 +13,19 @@ int main(int argc, char **argv)
 		validateInput(argc, argv);
 
 		
-		// Parse input
-		std::vector<int> vec = parseVector(argc, argv);
-		std::deque<int> deq = parseDeque(argc, argv);
-
-
 		// Start soring
-		printBefore(vec);
+		std::vector<int> vecTemp = parseVector(argc, argv);
+		printBefore(vecTemp);
 
+
+		// Sort and time
 		clock_t vStart = clock();
+		std::vector<int> vec = parseVector(argc, argv);
 		std::vector<int> sortedVec = fordJohnsonVector(vec);
 		clock_t vEnd = clock();
 		
 		clock_t dStart = clock();
+		std::deque<int> deq = parseDeque(argc, argv);
 		std::deque<int> sortedDeq = fordJohnsonDeque(deq);
 		clock_t dEnd = clock();
 
