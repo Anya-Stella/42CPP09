@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 		
 		// Parse input
 		std::vector<int> vec = parseVector(argc, argv);
-		std::deque<int> deq = parseDeque(argc, argv);
+		// std::deque<int> deq = parseDeque(argc, argv);
 
 
 		// Start soring
@@ -25,19 +25,19 @@ int main(int argc, char **argv)
 		std::vector<int> sortedVec = fordJohnsonVector(vec);
 		clock_t vEnd = clock();
 		
-		clock_t dStart = clock();
-		std::deque<int> sortedDeq = fordJohnsonDeque(deq);
-		clock_t dEnd = clock();
+		// clock_t dStart = clock();
+		// std::deque<int> sortedDeq = fordJohnsonDeque(deq);
+		// clock_t dEnd = clock();
 
 		printAfter(sortedVec);
 
 
 		// calculate time and print
 		double vTime = static_cast<double>(vEnd - vStart) * 1000000.0 / CLOCKS_PER_SEC;
-		double dTime = static_cast<double>(dEnd - dStart) * 1000000.0 / CLOCKS_PER_SEC;
+		// double dTime = static_cast<double>(dEnd - dStart) * 1000000.0 / CLOCKS_PER_SEC;
 
 		printTime("std::vector", vec.size(), vTime);
-		printTime("std::deque", deq.size(), dTime);
+		// printTime("std::deque", deq.size(), dTime);
 	}
 	catch (const std::exception &e)
 	{
