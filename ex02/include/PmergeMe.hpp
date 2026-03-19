@@ -19,4 +19,4 @@ void				printTime(const std::string& containerName,std::size_t size, double time
 
 // sorting algorithm
 std::vector<int>	fordJohnsonVector(const std::vector<int> &input);
-// std::deque<int>		fordJohnsonDeque(const std::deque<int> &input);
+std::deque<int>		fordJohnsonDeque(const std::deque<int> &input);

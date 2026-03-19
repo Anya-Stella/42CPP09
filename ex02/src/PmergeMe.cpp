@@ -176,9 +176,9 @@ static std::vector<int> mergeChains(const std::vector< std::pair<int, int> > &or
 		mainChain.push_back(orderedPairs[i].first);
 	
 	// 挿入順の構築
-	std::vector<std::size_t> order = buildInsertionOrder(orderedPairs.size());// {0, 2, 1, 4, 3}
+	std::vector<std::size_t> order = buildInsertionOrder(orderedPairs.size());// {0, 2, 1, 4, 3, ...}
 
-	// {0, 2, 1, 4, 3}の順で、orderedPairsから値をmainChainに挿入
+	// {0, 2, 1, 4, 3, ...}の順で、orderedPairsから値をmainChainに挿入
 	for (std::size_t i = 0; i < order.size(); ++i)
 	{
 		std::size_t idx = order[i];
@@ -221,3 +221,108 @@ std::vector<int> fordJohnsonVector(const std::vector<int> &input)
 	// 3: orderedPairsを基に、mainchainとsubchainをマージ
 	return mergeChains(orderedPairs, hasOdd, oddValue);
 }
+
+
+/******** FORD-JOHNSON ALGORITHM FOR DEQUES ********/
+static std::deque< std::pair<int, int> > makePairsDeque(const std::deque<int> &input, bool &hasOdd, int &oddValue)
+{
+	std::deque< std::pair<int, int> > pairs;
+	hasOdd = false;
+	oddValue = 0;
+
+	for (std::size_t i = 0; i + 1 < input.size(); i += 2)
+	{
+		int a = input[i];
+		int b = input[i + 1];
+		if (a < b)
+			std::swap(a, b);
+		pairs.push_back(std::make_pair(a, b));
+	}
+	if (input.size() % 2 != 0)
+	{
+		hasOdd = true;
+		oddValue = input.back();
+	}
+	return pairs;
+}
+
+static std::deque<int> extractLargeValuesDeque(const std::deque< std::pair<int, int> > &pairs)
+{
+	std::deque<int> largeValues;
+	for (std::size_t i = 0; i < pairs.size(); ++i)
+		largeValues.push_back(pairs[i].first);
+	return largeValues;
+}
+
+static std::deque< std::pair<int, int> > reorderPairsBySortedLargeDeque(const std::deque< std::pair<int, int> > &pairs, const std::deque<int> &sortedLarge)
+{
+	std::deque< std::pair<int, int> > ordered;
+	std::vector<bool> used(pairs.size(), false);
+
+	for (std::size_t i = 0; i < sortedLarge.size(); ++i)
+	{
+		for (std::size_t j = 0; j < pairs.size(); ++j)
+		{
+			if (!used[j] && pairs[j].first == sortedLarge[i])
+			{
+				ordered.push_back(pairs[j]);
+				used[j] = true;
+				break;
+			}
+		}
+	}
+	return ordered;
+}
+
+static std::deque<int> mergeChainsDeque(const std::deque< std::pair<int, int> > &orderedPairs, bool hasOdd, int oddValue)
+{
+	std::deque<int> mainChain;
+
+	// mainChainの初期化
+	for (std::size_t i = 0; i < orderedPairs.size(); ++i)
+		mainChain.push_back(orderedPairs[i].first);
+
+	// 挿入順の構築
+	std::vector<std::size_t> order = buildInsertionOrder(orderedPairs.size()); // {0, 2, 1, 4, 3, ...}
+
+	// {0, 2, 1, 4, 3, ...}の順で、orderedPairsから値をmainChainに挿入
+	for (std::size_t i = 0; i < order.size(); ++i)
+	{
+		std::size_t idx = order[i];
+		int valueToInsert = orderedPairs[idx].second;
+		int upperValue = orderedPairs[idx].first;
+
+		// valueToInsertをmainChainに挿入
+		std::deque<int>::iterator upperIt = std::find(mainChain.begin(), mainChain.end(), upperValue);
+		std::deque<int>::iterator insertPos = std::lower_bound(mainChain.begin(), upperIt, valueToInsert);
+		mainChain.insert(insertPos, valueToInsert);
+	}
+	if (hasOdd)
+	{
+		std::deque<int>::iterator insertPos = std::lower_bound(mainChain.begin(), mainChain.end(), oddValue);
+		mainChain.insert(insertPos, oddValue);
+	}
+	return mainChain;
+}
+
+std::deque<int> fordJohnsonDeque(const std::deque<int> &input)
+{
+	bool hasOdd = false;
+	int oddValue = 0;
+
+	// ベースケース
+	if (input.size() <= 1)
+		return input;
+
+	// 1: ペア作成
+	std::deque< std::pair<int, int> > pairs = makePairsDeque(input, hasOdd, oddValue);
+
+	// 2: ペアの大きい順にpairsをソート
+	std::deque<int> largeValues = extractLargeValuesDeque(pairs);
+	std::deque<int> sortedLarge = fordJohnsonDeque(largeValues);
+	std::deque< std::pair<int, int> > orderedPairs = reorderPairsBySortedLargeDeque(pairs, sortedLarge);
+
+	// 3: orderedPairsを基に、mainchainとsubchainをマージ
+	return mergeChainsDeque(orderedPairs, hasOdd, oddValue);
+}
+
