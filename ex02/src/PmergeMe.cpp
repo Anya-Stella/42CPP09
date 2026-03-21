@@ -1,4 +1,8 @@
 #include "../include/PmergeMe.hpp"
+#include <climits>
+#include <algorithm>
+#include <cstdlib>
+
 
 /******** VALIDATION ********/
 static void validateToken(const std::string &s)
